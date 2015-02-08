@@ -92,6 +92,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.crda.sh \
+    init.qcom.post_boot.sh \
     init.qcom.rc \
     init.qcom.usb.rc \
     init.sec.boot.sh \

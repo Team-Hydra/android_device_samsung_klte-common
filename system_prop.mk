@@ -1,15 +1,18 @@
 # Audio
 PRODUCT_PROPERTY_OVERRIDES += \
-    av.offload.enable=false \
     persist.audio.fluence.speaker=true \
     persist.audio.fluence.voicecall=true \
     persist.audio.fluence.voicerec=false \
     ro.qc.sdk.audio.fluencetype=fluence \
-    use.voice.path.for.pcm.voip=false \
-    use.dedicated.device.for.voip=true \
-    lpa.decode=false \
-    tunnel.decode=false
-
+    mm.enable.smoothstreaming=true \
+    av.streaming.offload.enable=true \
+    use.voice.path.for.pcm.voip=true \
+    audio.offload.multiple.enabled=true \
+    audio.offload.gapless.enabled=true \
+    tunnel.audio.encode=true \
+    media.aac_51_output_enabled=true \
+    audio.offload.pcm.16bit.enable=true \
+    audio.offload.pcm.24bit.enable=true
 
 # Display
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -33,9 +36,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.data.netmgrd.qos.enable=true \
     persist.radio.add_power_save=1 \
-    persist.radio.apm_sim_not_pwdn=1 \
     persist.radio.lte_vrat_report=1 \
     ro.telephony.ril_class=KlteRIL
+
+# Perf
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Sensors
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -44,3 +50,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # WiFi
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0
+
+# Tethering
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    net.tethering.noprovisioning=true
+

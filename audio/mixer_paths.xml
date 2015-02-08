@@ -12,6 +12,7 @@
 	<ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia10" value="0" />
 
 	<ctl name="SLIMBUS_0_RX Port Mixer SLIM_0_TX" value="0" />
+	<ctl name="MultiMedia10 Mixer SLIM_0_TX" value="0" />
 
 	<ctl name="AUX_PCM_RX Audio Mixer MultiMedia1" value="0" />
 	<ctl name="AUX_PCM_RX Audio Mixer MultiMedia4" value="0" />
@@ -87,6 +88,7 @@
 
 	<!-- reset TX part -->
 	<ctl name="MultiMedia5 Mixer SLIM_0_TX" value="0" />
+	<ctl name="MultiMedia10 Mixer SLIM_0_TX" value="0" />
 	<ctl name="MultiMedia5 Mixer AFE_PCM_TX" value="0" />
 	<ctl name="MultiMedia1 Mixer MI2S_TX" value="0" />
 	<ctl name="MultiMedia1 Mixer SLIM_0_TX" value="0" />
@@ -161,7 +163,12 @@
 	<ctl name="ES705 Voice LPM Enable" value="0" />
 	<ctl name="Internal Route Config" value="5" />
 
-	<ctl name="TTY Mode" value="OFF" />
+	<ctl name="MultiMedia1 Mixer AUX_PCM_UL_TX" value="0" />
+	<ctl name="AUX_PCM_RX_Voice Mixer Voice Stub" value="0" />
+	<ctl name="Voice Stub Tx Mixer SLIM_0_TX" value="0" />
+	<ctl name="AUXPCM_RX Port Mixer SLIM_0_TX" value="0" />
+
+      <ctl name="TTY Mode" value="OFF" />
 	<!-- end of initial mixer settings -->
 
 	<!-- ================================================================ -->
@@ -185,6 +192,11 @@
 		<ctl name="AUX_PCM_RX Audio Mixer MultiMedia1" value="1" />
 	</path>
 
+	<path name="deep-buffer-playback speaker-and-bt-sco">
+		<path name="deep-buffer-playback bt-sco" />
+		<path name="deep-buffer-playback" />
+	</path>
+
 	<!-- low latency -->
 	<path name="low-latency-playback">
 		<ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia5" value="1" />
@@ -206,6 +218,10 @@
 	<!-- low latency -->
 	<path name="jam-framework-playback">
 		<ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia10" value="1" />
+	</path>
+
+	<path name="jam-framework-capture">
+		<ctl name="MultiMedia10 Mixer SLIM_0_TX" value="1" />
 	</path>
 
 	<!-- tunnel -->
@@ -273,6 +289,16 @@
 		<ctl name="MultiMedia1 Mixer VOC_REC_UL" value="1" />
 		<ctl name="MultiMedia1 Mixer VOC_REC_DL" value="1" />
 	</path>	
+
+	<path name="bt-call-forwarding">
+		<ctl name="SLIM_0_RX_Voice Mixer Voice Stub" value="1" />
+		<ctl name="AUX_PCM_RX_Voice Mixer Voice Stub" value="1" />
+		<ctl name="Voice Stub Tx Mixer SLIM_0_TX" value="1" />
+		<ctl name="Voice Stub Tx Mixer AUX_PCM_UL_TX" value="1" />
+		<ctl name="AUXPCM_RX Port Mixer SLIM_0_TX" value="1" />
+		<ctl name="SLIMBUS_0_RX Port Mixer AUX_PCM_UL_TX" value="1" />
+	</path>
+	
 	<!-- end of Verb -->
 
 	<!-- ================================================================ -->
@@ -493,6 +519,24 @@
 		<ctl name="RX7 Digital Volume" value="81" />
 		<ctl name="SPK DRV Volume" value="8" />
 	</path>
+
+	<path name="speaker-and-bt-sco">
+		<path name="spk" />
+		<ctl name="RX7 Digital Volume" value="79" />
+		<ctl name="SPK DRV Volume" value="8" />
+		<ctl name="COMP0 Switch" value="1" />
+	</path>
+
+	<path name="speaker-and-headphones-bt-sco">
+		<path name="spk-ear" />
+		<ctl name="HPHL Volume" value="0" />
+		<ctl name="HPHR Volume" value="0" />
+		<ctl name="RX1 Digital Volume" value="81" />
+		<ctl name="RX2 Digital Volume" value="81" />
+		<ctl name="RX7 Digital Volume" value="80" />
+		<ctl name="SPK DRV Volume" value="8" />
+	</path>
+		
 	<!-- end of Play Scenario -->
 
 	<!-- ================================================================ -->

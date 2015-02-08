@@ -31,7 +31,7 @@
 #include <hardware/hardware.h>
 #include <hardware/camera.h>
 #include <camera/Camera.h>
-#include <camera/CameraParameters.h>
+#include <camera/CameraParameters2.h>
 
 static android::Mutex gCameraWrapperLock;
 static camera_module_t *gVendorModule = 0;
@@ -97,8 +97,6 @@ static int check_vendor_module()
     return rv;
 }
 
-#define KEY_VIDEO_HFR_VALUES "video-hfr-values"
-
 static char *camera_fixup_getparams(int __attribute__((unused)) id,
     const char *settings)
 {
@@ -110,18 +108,26 @@ static char *camera_fixup_getparams(int __attribute__((unused)) id,
     params.dump();
 #endif
 
+	const char *videoSizesStr = params.get(android::CameraParameters::KEY_SUPPORTED_VIDEO_SIZES);
+	char tmpsz[strlen(videoSizesStr) + 10 + 1];
+	sprintf(tmpsz, "3840x2160,%s", videoSizesStr);
+	params.set(android::CameraParameters::KEY_SUPPORTED_VIDEO_SIZES, tmpsz);
+
     /* If the vendor has HFR values but doesn't also expose that
      * this can be turned off, fixup the params to tell the Camera
      * that it really is okay to turn it off.
      */
 
-    const char *hfrValues = params.get(KEY_VIDEO_HFR_VALUES);
+    const char* hfrValues = params.get(android::CameraParameters::KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES);
     if (hfrValues && *hfrValues && ! strstr(hfrValues, "off")) {
         char tmp[strlen(hfrValues) + 4 + 1];
         sprintf(tmp, "%s,off", hfrValues);
-        params.set(KEY_VIDEO_HFR_VALUES, tmp);
+        params.set(android::CameraParameters::KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, tmp);
     }
     
+    /* Enforce video-snapshot-supported to true */
+    params.set(android::CameraParameters::KEY_VIDEO_SNAPSHOT_SUPPORTED, "true");
+
     /* Enforce video-snapshot-supported to true */
     params.set(android::CameraParameters::KEY_VIDEO_SNAPSHOT_SUPPORTED, "true");
 

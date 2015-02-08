@@ -18,6 +18,7 @@
 /data/misc/gsiff_ctrl_q                                 u:object_r:location_data_file:s0
 
 # NFC
+/dev/bcm2079x                                           u:object_r:nfc_device:s0
 /dev/pn547                                              u:object_r:nfc_device:s0
 
 # SEC
@@ -28,6 +29,9 @@
 /efs/FactoryApp/baro_delta                              u:object_r:sensors_efs_file:s0
 /efs/gyro_cal_data                                      u:object_r:sensors_efs_file:s0
 /efs/prox_cal                                           u:object_r:sensors_efs_file:s0
+
+# SSD
+/dev/block/platform/msm_sdcc\.1/by-name/ssd             u:object_r:ssd_device:s0
 
 # WiFi
 /data/.wifiver.info                                     u:object_r:wifi_data_file:s0

@@ -52,6 +52,7 @@
 #define STR_SURF      "Surf"
 #define STR_MTP       "MTP"
 #define STR_APQ       "apq"
+#define STR_AUTO      "auto"
 #define IS_STR_END(c) ((c) == '\0' || (c) == '\n' || (c) == '\r')
 #define LENGTH(s) (sizeof(s) - 1)
 #define GPS_CHECK_NO_ERROR 0
@@ -202,6 +203,12 @@ unsigned int loc_get_target(void)
         read_a_line(id, rd_id, LINE_LEN);
     } else {
         read_a_line(id_dep, rd_id, LINE_LEN);
+    }
+
+    if( !memcmp(baseband, STR_AUTO, LENGTH(STR_AUTO)) )
+    {
+          gTarget = TARGET_AUTO;
+          goto detected;
     }
 
     if( !memcmp(baseband, STR_APQ, LENGTH(STR_APQ)) ){

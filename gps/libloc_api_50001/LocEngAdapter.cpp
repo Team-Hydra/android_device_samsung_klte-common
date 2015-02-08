@@ -178,6 +178,23 @@ void LocEngAdapter::reportSv(GpsSvStatus &svStatus,
     }
 }
 
+
+void LocEngAdapter::reportSvMeasurement(GnssSvMeasurementSet &svMeasurementSet)
+{
+    // We send SvMeasurementSet to AmtProxy/ULPProxy to be forwarded as necessary.
+    if (! mUlp->reportSvMeasurement(svMeasurementSet)) {
+        //Send to Internal Adapter later if needed by LA
+    }
+}
+
+void LocEngAdapter::reportSvPolynomial(GnssSvPolynomial &svPolynomial)
+{
+    // We send SvMeasurementSet to AmtProxy/ULPProxy to be forwarded as necessary.
+    if (! mUlp->reportSvPolynomial(svPolynomial)) {
+       //Send to Internal Adapter later if needed by LA
+    }
+}
+
 void LocEngAdapter::setInSession(bool inSession)
 {
     mNavigating = inSession;
@@ -301,4 +318,26 @@ inline
 void LocEngAdapter::handleEngineUpEvent()
 {
     sendMsg(new LocEngUp(mOwner));
+}
+
+enum loc_api_adapter_err LocEngAdapter::setXtraVersionCheck(int check)
+{
+    enum loc_api_adapter_err ret;
+    ENTRY_LOG();
+    enum xtra_version_check eCheck;
+    switch (check) {
+    case 0:
+        eCheck = DISABLED;
+    case 1:
+        eCheck = AUTO;
+    case 2:
+        eCheck = XTRA2;
+    case 3:
+        eCheck = XTRA3;
+    defaul:
+        eCheck = DISABLED;
+    }
+    ret = mLocApi->setXtraVersionCheck(eCheck);
+    EXIT_LOG(%d, ret);
+    return ret;
 }

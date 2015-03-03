@@ -98,6 +98,7 @@ BOARD_SEPOLICY_UNION += \
     mpdecision.te \
     platform_app.te \
     rild.te \
+    rmt_storage.te \
     system_app.te \
     system_server.te \
     tee.te \

@@ -89,7 +89,6 @@ BOARD_SEPOLICY_UNION += \
     file.te \
     file_contexts \
     genfs_contexts \
-    macloader.te \
     mediaserver.te \
     mm-qcamerad.te \
     mpdecision.te \

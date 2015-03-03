@@ -1,2 +1,3 @@
-allow ueventd sysfs_camera:file { open read write };
-allow ueventd sysfs_vibeamp:file { open read write };
+allow ueventd lcd_dev:file rw_file_perms;
+allow ueventd touch_key_sysfs:file rw_file_perms;
+allow ueventd vibe_dev:file rw_file_perms;

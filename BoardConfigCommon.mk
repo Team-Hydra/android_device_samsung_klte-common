@@ -89,16 +89,22 @@ BOARD_SEPOLICY_UNION += \
     file.te \
     file_contexts \
     genfs_contexts \
+    kernel.te \
+    lcd_dev.te \
+    macloader.te \
     mediaserver.te \
+    mdm_helper.te \
     mm-qcamerad.te \
     mpdecision.te \
     platform_app.te \
     rild.te \
-    rmt_storage.te \
     system_app.te \
     system_server.te \
+    tee.te \
     time_daemon.te \
+    ueventd.te \
     wpa.te \
+    vibe_dev.te \
     vold.te
 
 # Wifi

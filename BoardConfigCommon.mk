@@ -83,6 +83,25 @@ TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
 BOARD_SEPOLICY_DIRS += \
     device/samsung/klte-common/sepolicy
 
+BOARD_SEPOLICY_UNION += \
+    bluetooth.te \
+    device.te \
+    file.te \
+    file_contexts \
+    genfs_contexts \
+    macloader.te \
+    mediaserver.te \
+    mm-qcamerad.te \
+    mpdecision.te \
+    platform_app.te \
+    rild.te \
+    rmt_storage.te \
+    system_app.te \
+    system_server.te \
+    time_daemon.te \
+    wpa.te \
+    vold.te
+
 # Wifi
 BOARD_HAVE_SAMSUNG_WIFI := true
 BOARD_WLAN_DEVICE := bcmdhd

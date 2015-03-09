@@ -20,3 +20,16 @@
 # NFC
 /dev/bcm2079x                                           u:object_r:nfc_device:s0
 /dev/pn547                                              u:object_r:nfc_device:s0
+
+# SEC
+/sys/devices/virtual/sec/sec_key/hall_irq_ctrl          u:object_r:sysfs_sec:s0
+
+# Sensors
+/dev/batch_io                                           u:object_r:sensors_device:s0
+/efs/FactoryApp/baro_delta                              u:object_r:sensors_efs_file:s0
+/efs/gyro_cal_data                                      u:object_r:sensors_efs_file:s0
+/efs/prox_cal                                           u:object_r:sensors_efs_file:s0
+
+# WiFi
+/data/.wifiver.info                                     u:object_r:wifi_data_file:s0
+/efs/wifi(/.*)?                                         u:object_r:wifi_efs_file:s0

@@ -1,3 +1,2 @@
-allow rild proc_net:file write;
-allow rild self:capability dac_override;
-allow rild sysfs:file rw_file_perms;
+allow rild proc_net:file { write };
+allow rild sysfs_sec:file { getattr open read write };

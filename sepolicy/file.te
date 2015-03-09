@@ -4,3 +4,5 @@ type sysfs_display, fs_type, sysfs_type;
 type sysfs_sec, fs_type, sysfs_type;
 type sysfs_vibeamp, fs_type, sysfs_type;
 type wifi_efs_file, file_type;
+type macloader, domain;
+type macloader_exec, exec_type, file_type;

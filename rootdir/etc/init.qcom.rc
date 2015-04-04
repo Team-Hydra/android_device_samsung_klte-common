@@ -187,11 +187,6 @@ on post-fs-data
     mkdir /data/fota 0771
     chown system system /data/fota
 
-    #Create directory for hostapd
-    mkdir /data/hostapd 0771 system wifi
-    #Provide the access to hostapd.conf only to root and group
-    chmod 0660 /data/hostapd/hostapd.conf
-
     # Create /data/time folder for time-services
     mkdir /data/time/ 0700 system system
 
@@ -965,6 +960,10 @@ on boot
     chmod 0660 /sys/class/lcd/panel/panel_colors
     chown system system /sys/class/lcd/panel/panel_colors
 
+    # LiveDisplay Feature
+    chown system system /sys/devices/virtual/graphics/fb0/rgb
+    chmod 0660 /sys/devices/virtual/graphics/fb0/rgb
+
     # permission for Input Device(Touchkey).
     chmod 0660 /sys/class/input/input1/enabled
     chown system system /sys/class/input/input1/enabled
@@ -1173,7 +1172,7 @@ on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler row
 
     # Configure the hardware properly
-    write /sys/module/lpm_levels/enable_low_power/l2 2
+    write /sys/module/lpm_resources/enable_low_power/l2 4
     write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
     write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
     write /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled 1
@@ -1243,14 +1242,6 @@ on property:sys.boot_completed=1
 
     # Post boot services
     start mpdecision
-    start qrngp
-
-service hostapd /system/bin/hostapd -dd /data/misc/wifi/hostapd.conf
-    class late_start
-    user root
-    group root
-    oneshot
-    disabled
 
 service charger /charger
     class charger

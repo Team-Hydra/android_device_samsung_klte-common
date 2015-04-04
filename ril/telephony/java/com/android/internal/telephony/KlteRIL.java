@@ -19,43 +19,37 @@ package com.android.internal.telephony;
 import static com.android.internal.telephony.RILConstants.*;
 
 import android.content.Context;
-import android.media.AudioManager;
+import android.telephony.Rlog;
 import android.os.Message;
 import android.os.Parcel;
 import android.telephony.PhoneNumberUtils;
-import android.telephony.Rlog;
 import android.telephony.SignalStrength;
-import com.android.internal.telephony.cdma.CdmaInformationRecords;
-import com.android.internal.telephony.cdma.CdmaInformationRecords.CdmaSignalInfoRec;
-import com.android.internal.telephony.cdma.SignalToneUtil;
 import com.android.internal.telephony.uicc.IccCardApplicationStatus;
 import com.android.internal.telephony.uicc.IccCardStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * RIL customization for Galaxy S5 (GSM) LTE devices
+ * RIL customization for Galaxy Note 4 (GSM) LTE devices
  *
  * {@hide}
  */
 public class KlteRIL extends RIL {
 
     private static final int RIL_REQUEST_DIAL_EMERGENCY = 10016;
-
+    private static final int RIL_UNSOL_DEVICE_READY_NOTI = 11008;
     private static final int RIL_UNSOL_AM = 11010;
     private static final int RIL_UNSOL_WB_AMR_STATE = 11017;
-    private static final int RIL_UNSOL_RESPONSE_HANDOVER = 11021;
-
-    private boolean mIsGsm = false;
-
-    public KlteRIL(Context context, int networkMode, int cdmaSubscription) {
-        super(context, networkMode, cdmaSubscription, null);
-        mQANElements = 6;
-    }
+    private static final int RIL_UNSOL_SRVCC_HANDOVER = 11029;
+    private static final int RIL_REQUEST_ACTIVATE_DATA_CALL = 11037;
 
     public KlteRIL(Context context, int preferredNetworkType,
             int cdmaSubscription, Integer instanceId) {
-        super(context, preferredNetworkType, cdmaSubscription, instanceId);
+        this(context, preferredNetworkType, cdmaSubscription);
+	}
+
+    public KlteRIL(Context context, int networkMode, int cdmaSubscription) {
+        super(context, networkMode, cdmaSubscription);
         mQANElements = 6;
     }
 
@@ -90,40 +84,21 @@ public class KlteRIL extends RIL {
     }
 
     @Override
-    protected void
-    processUnsolicited (Parcel p) {
-        Object ret;
-        int dataPosition = p.dataPosition(); // save off position within the Parcel
-        int response = p.readInt();
+    public void
+    acceptCall (Message result) {
+        RILRequest rr
+                = RILRequest.obtain(RIL_REQUEST_ANSWER, result);
 
-        switch(response) {
-            case RIL_UNSOL_AM:
-                ret = responseString(p);
-                String amCommand = (String) ret;
-                executeAm(amCommand);
-                break;
-            case RIL_UNSOL_WB_AMR_STATE:
-                ret = responseInts(p);
-                int[] amrWbState = (int[]) ret;
-                enableAmrWb(amrWbState[0] == 1);
-                break;
-            case RIL_UNSOL_RESPONSE_HANDOVER:
-                ret = responseVoid(p);
-                break;
-            default:
-                // Rewind the Parcel
-                p.setDataPosition(dataPosition);
-
-                // Forward responses that we are not overriding to the super class
-                super.processUnsolicited(p);
-                return;
-        }
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+		rr.mParcel.writeInt(1);
+		rr.mParcel.writeInt(0);
+        send(rr);
     }
 
     @Override
     protected Object
     responseIccCardStatus(Parcel p) {
-        IccCardApplicationStatus appStatus = null;
+        IccCardApplicationStatus appStatus;
 
         IccCardStatus cardStatus = new IccCardStatus();
         cardStatus.setCardState(p.readInt());
@@ -158,40 +133,6 @@ public class KlteRIL extends RIL {
 
             cardStatus.mApplications[i] = appStatus;
         }
-
-        // For Sprint LTE only SIM
-        if (appStatus != null
-                && numApplications == 1
-                && !mIsGsm
-                && appStatus.app_type == appStatus.AppTypeFromRILInt(2)) {
-            cardStatus.mApplications = new IccCardApplicationStatus[3];
-            cardStatus.mApplications[0] = appStatus;
-            cardStatus.mGsmUmtsSubscriptionAppIndex = 0;
-            cardStatus.mCdmaSubscriptionAppIndex = 1;
-            cardStatus.mImsSubscriptionAppIndex = 2;
-
-            IccCardApplicationStatus appStatus2 = new IccCardApplicationStatus();
-            appStatus2.app_type       = appStatus2.AppTypeFromRILInt(4); // csim state
-            appStatus2.app_state      = appStatus.app_state;
-            appStatus2.perso_substate = appStatus.perso_substate;
-            appStatus2.aid            = appStatus.aid;
-            appStatus2.app_label      = appStatus.app_label;
-            appStatus2.pin1_replaced  = appStatus.pin1_replaced;
-            appStatus2.pin1           = appStatus.pin1;
-            appStatus2.pin2           = appStatus.pin2;
-            cardStatus.mApplications[cardStatus.mCdmaSubscriptionAppIndex] = appStatus2;
-
-            IccCardApplicationStatus appStatus3 = new IccCardApplicationStatus();
-            appStatus3.app_type       = appStatus3.AppTypeFromRILInt(5); // ims state
-            appStatus3.app_state      = appStatus.app_state;
-            appStatus3.perso_substate = appStatus.perso_substate;
-            appStatus3.aid            = appStatus.aid;
-            appStatus3.app_label      = appStatus.app_label;
-            appStatus3.pin1_replaced  = appStatus.pin1_replaced;
-            appStatus3.pin1           = appStatus.pin1;
-            appStatus3.pin2           = appStatus.pin2;
-            cardStatus.mApplications[cardStatus.mImsSubscriptionAppIndex] = appStatus3;
-        }
         return cardStatus;
     }
 
@@ -222,12 +163,10 @@ public class KlteRIL extends RIL {
             dc.als = p.readInt();
             voiceSettings = p.readInt();
             dc.isVoice = (0 != voiceSettings);
-            if (mIsGsm) {
-                boolean isVideo = (0 != p.readInt());   // Samsung CallDetails
-                int call_type = p.readInt();            // Samsung CallDetails
-                int call_domain = p.readInt();          // Samsung CallDetails
-                String csv = p.readString();            // Samsung CallDetails
-            }
+            boolean isVideo = (0 != p.readInt());   // Samsung CallDetails
+            int call_type = p.readInt();            // Samsung CallDetails
+            int call_domain = p.readInt();          // Samsung CallDetails
+            String csv = p.readString();            // Samsung CallDetails
             dc.isVoicePrivacy = (0 != p.readInt());
             dc.number = p.readString();
             int np = p.readInt();
@@ -296,6 +235,7 @@ public class KlteRIL extends RIL {
         int lteCqi = p.readInt();
         int tdScdmaRscp = p.readInt();
         // constructor sets default true, makeSignalStrengthFromRilParcel does not set it
+        boolean isGsm = true;
 
         if ((lteSignalStrength & 0xff) == 255 || lteSignalStrength == 99) {
             lteSignalStrength = 99;
@@ -313,36 +253,44 @@ public class KlteRIL extends RIL {
                     " evdoEcio: " + evdoEcio + " evdoSnr:" + evdoSnr +
                     " lteSignalStrength:" + lteSignalStrength + " lteRsrp:" + lteRsrp +
                     " lteRsrq:" + lteRsrq + " lteRssnr:" + lteRssnr + " lteCqi:" + lteCqi +
-                    " tdScdmaRscp:" + tdScdmaRscp + " isGsm:" + (mIsGsm ? "true" : "false"));
+                    " tdScdmaRscp:" + tdScdmaRscp + " isGsm:" + (isGsm ? "true" : "false"));
 
         return new SignalStrength(gsmSignalStrength, gsmBitErrorRate, cdmaDbm, cdmaEcio, evdoDbm,
                 evdoEcio, evdoSnr, lteSignalStrength, lteRsrp, lteRsrq, lteRssnr, lteCqi,
-                tdScdmaRscp, mIsGsm);
+                tdScdmaRscp, isGsm);
     }
 
     @Override
-    protected void notifyRegistrantsCdmaInfoRec(CdmaInformationRecords infoRec) {
-        final int response = RIL_UNSOL_CDMA_INFO_REC;
+    protected void
+    processUnsolicited (Parcel p) {
+        Object ret;
+        int dataPosition = p.dataPosition(); // save off position within the Parcel
+        int response = p.readInt();
 
-        if (infoRec.record instanceof CdmaSignalInfoRec) {
-            CdmaSignalInfoRec rec = (CdmaSignalInfoRec) infoRec.record;
-            if (rec != null
-                    && rec.isPresent
-                    && rec.signalType == SignalToneUtil.IS95_CONST_IR_SIGNAL_IS54B
-                    && rec.alertPitch == SignalToneUtil.IS95_CONST_IR_ALERT_MED
-                    && rec.signal == SignalToneUtil.IS95_CONST_IR_SIG_IS54B_L) {
-                /* Drop record, otherwise IS95_CONST_IR_SIG_IS54B_L tone will
-                 * continue to play after the call is connected */
+        switch(response) {
+            case RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED:
+                ret = responseVoid(p);
+                break;
+            case RIL_UNSOL_DEVICE_READY_NOTI:
+                ret = responseVoid(p);
+                break;
+            case RIL_UNSOL_AM:
+                ret = responseString(p);
+                break;
+            case RIL_UNSOL_WB_AMR_STATE:
+                ret = responseInts(p);
+                break;
+            case RIL_UNSOL_SRVCC_HANDOVER:
+                ret = responseVoid(p);
+                break;
+            default:
+                // Rewind the Parcel
+                p.setDataPosition(dataPosition);
+
+                // Forward responses that we are not overriding to the super class
+                super.processUnsolicited(p);
                 return;
-            }
         }
-        super.notifyRegistrantsCdmaInfoRec(infoRec);
-    }
-
-    @Override
-    public void setPhoneType(int phoneType) {
-        super.setPhoneType(phoneType);
-        mIsGsm = (phoneType != RILConstants.CDMA_PHONE);
     }
 
     private void
@@ -360,24 +308,5 @@ public class KlteRIL extends RIL {
         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
 
         send(rr);
-    }
-
-    private void
-    executeAm(String cmd) {
-        /* NOTE: Arbitrary command execution over the network is really scary */
-        String amCmd = "am " + cmd;
-        if (RILJ_LOGD) riljLog("Executing: " + amCmd);
-        try {
-            Runtime.getRuntime().exec(amCmd);
-        } catch (Exception e) {
-            if (RILJ_LOGD) riljLog("Failed to execute: " + amCmd + ": " + e.toString());
-        }
-    }
-
-    private void
-    enableAmrWb(boolean enable) {
-        if (RILJ_LOGD) riljLog("enableAmrWb(): " + enable);
-        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        am.setParameters(enable ? "wide_voice_enable=true" : "wide_voice_enable=false");
     }
 }

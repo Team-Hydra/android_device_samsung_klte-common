@@ -707,14 +707,12 @@
 	<!-- Voice call Scenario -->
 	<!-- RX part -->
 	<path name="voice-call-handset">
-		<ctl name="ES705 RX1 Enable" value="1" />
 		<path name="rcv" />
 		<ctl name="EAR PA Gain" value="POS_6_DB" />
 		<ctl name="RX1 Digital Volume" value="82" />
 	</path>
 
 	<path name="voice-call-handset-extra-vol">
-		<ctl name="ES705 RX1 Enable" value="1" />
 		<path name="rcv" />
 		<ctl name="EAR PA Gain" value="POS_6_DB" />
 		<ctl name="RX1 Digital Volume" value="82" />
@@ -771,12 +769,8 @@
 	</path>
 	<!-- TX part -->
 	<path name="voice-call-main-mic">
-		<ctl name="ES705 TX1 Enable" value="1" />
-		<path name="main-sub-mic" />
+		<path name="main-mic" />
 		<ctl name="DEC2 Volume" value="96" />
-		<ctl name="DEC4 Volume" value="96" />
-		<ctl name="ES705-AP Tx Channels" value="One" />
-		<ctl name="Internal Route Config" value="4" />
 	</path>
 
 	<path name="voice-call-sub-mic">

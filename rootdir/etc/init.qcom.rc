@@ -42,6 +42,7 @@ on early-init
 
 on init
     export LD_PRELOAD "/system/lib/libboringssl-compat.so"
+    export LD_PRELOAD "/system/lib/libsamsung_symbols.so"
 
     # Support legacy paths
     symlink /sdcard /mnt/sdcard

@@ -50,6 +50,9 @@ COMMON_GLOBAL_CFLAGS += -DCAMERA_VENDOR_L_COMPAT
 BOARD_HARDWARE_CLASS += device/samsung/klte-common/cmhw
 BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
 
+# Graphics
+TARGET_USE_COMPAT_GRALLOC_PERFORM := true
+
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 

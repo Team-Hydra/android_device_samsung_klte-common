@@ -782,7 +782,7 @@ on boot
     chown system radio /sys/class/sensors/hrm_sensor/vendor
     chown system radio /sys/class/sensors/hrm_sensor/device_id
 
-# UV_sensor
+    # UV_sensor
     chown system radio /sys/class/sensors/uv_sensor/raw_data
 
     # SensorHub

@@ -770,17 +770,8 @@ on boot
     chown system radio /sys/class/sensors/hrm_sensor/led_current
     chown system radio /sys/class/sensors/hrm_sensor/int_pin_check
     chown system radio /sys/class/sensors/hrm_sensor/lib_ver
-    chown system radio /sys/class/sensors/hrm_sensor/hrm_flush
-    chown system radio /sys/class/sensors/hrm_sensor/eol_lib_ver
-    chown system radio /sys/class/sensors/hrm_sensor/elf_lib_ver
-    chown system radio /sys/class/sensors/hrm_sensor/adpd_reg_read
-    chown system radio /sys/class/sensors/hrm_sensor/adpd_reg_write
-    chown system radio /sys/class/sensors/hrm_sensor/adpd_mode
-    chown system radio /sys/class/sensors/hrm_sensor/adpd_configuration
-    chown system radio /sys/class/sensors/hrm_sensor/adpd_stat
     chown system radio /sys/class/sensors/hrm_sensor/name
     chown system radio /sys/class/sensors/hrm_sensor/vendor
-    chown system radio /sys/class/sensors/hrm_sensor/device_id
 
     # UV_sensor
     chown system radio /sys/class/sensors/uv_sensor/raw_data

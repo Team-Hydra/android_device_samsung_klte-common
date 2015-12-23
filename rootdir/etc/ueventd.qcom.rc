@@ -181,20 +181,6 @@
 /dev/uio1                 0660   system     system
 /dev/uio2                 0660   system     system
 
-# sensorhub
-/dev/ssp_sensorhub        0660   system     system
-/dev/iio:device*		  0660	 system	system
-/sys/devices/f9967000.spi/spi_master/spi32766/spi32766.0/iio:device*   buffer/enable 0660	  system	system
-/sys/devices/f9967000.spi/spi_master/spi32766/spi32766.0/iio:device*   buffer/length 0660	  system	system
-/sys/devices/f9967000.spi/spi_master/spi32765/spi32765.0/iio:device*   buffer/enable 0660	  system	system
-/sys/devices/f9967000.spi/spi_master/spi32765/spi32765.0/iio:device*   buffer/length 0660	  system	system
-/sys/devices/f9967000.spi/spi_master/spi11/spi11.0/iio:device*   buffer/enable 0660	  system	system
-/sys/devices/f9967000.spi/spi_master/spi11/spi11.0/iio:device*   buffer/length 0660	  system	system
-/sys/devices/f9924000.spi/spi_master/spi32766/spi32766.0/iio:device*   buffer/enable 0660     system    radio
-/sys/devices/f9924000.spi/spi_master/spi32766/spi32766.0/iio:device*   buffer/length 0660     system    radio
-/sys/devices/f9924000.spi/spi_master/spi32765/spi32765.0/iio:device*   buffer/enable 0660     system    radio
-/sys/devices/f9924000.spi/spi_master/spi32765/spi32765.0/iio:device*   buffer/length 0660     system    radio
-
 #Accelerometer sensor
 /sys/devices/f9925000.i2c/i2c-0/0-0018/input/input*   enable     0664  system  system
 /sys/devices/f9925000.i2c/i2c-0/0-0018/input/input*   delay     0664  system  system

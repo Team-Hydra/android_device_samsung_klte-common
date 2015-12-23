@@ -35,6 +35,7 @@ on init
 
 on charger
     setprop sys.usb.config mass_storage
+    start adbd
 
 on fs
     mkdir /dev/usb-ffs 0770 shell shell

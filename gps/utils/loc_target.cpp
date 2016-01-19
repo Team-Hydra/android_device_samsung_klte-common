@@ -1,4 +1,4 @@
-/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -47,6 +47,7 @@
 #define MSM8930_ID_2 "116"
 #define APQ8030_ID_1 "157"
 #define APQ8074_ID_1 "184"
+#define PDS_ID_1     "178"
 
 #define LINE_LEN 100
 #define STR_LIQUID    "Liquid"
@@ -57,7 +58,10 @@
 #define LENGTH(s) (sizeof(s) - 1)
 #define GPS_CHECK_NO_ERROR 0
 #define GPS_CHECK_NO_GPS_HW 1
-#define QCA1530_DETECT_TIMEOUT 30
+/* When system server is started, it uses 20 seconds as ActivityManager
+ * timeout. After that it sends SIGSTOP signal to process.
+ */
+#define QCA1530_DETECT_TIMEOUT 15
 #define QCA1530_DETECT_PRESENT "yes"
 #define QCA1530_DETECT_PROGRESS "detect"
 
@@ -99,7 +103,7 @@ static int read_a_line(const char * file_path, char * line, int line_size)
  */
 static bool is_qca1530(void)
 {
-    static const char qca1530_property_name[] = "persist.qca1530";
+    static const char qca1530_property_name[] = "sys.qca1530";
     bool res = false;
     int ret, i;
     char buf[PROPERTY_VALUE_MAX];
@@ -204,8 +208,12 @@ unsigned int loc_get_target(void)
     } else {
         read_a_line(id_dep, rd_id, LINE_LEN);
     }
-
-    if( !memcmp(baseband, STR_APQ, LENGTH(STR_APQ)) ){
+    if( !memcmp(rd_hw_platform, STR_MTP, LENGTH(STR_MTP)) ){
+        if( !memcmp(rd_id, PDS_ID_1, LENGTH(PDS_ID_1))
+            && IS_STR_END(rd_id[LENGTH(PDS_ID_1)]) )
+            gTarget = TARGET_PDS;
+    }
+    else if( !memcmp(baseband, STR_APQ, LENGTH(STR_APQ)) ){
         if( !memcmp(rd_id, MPQ8064_ID_1, LENGTH(MPQ8064_ID_1))
             && IS_STR_END(rd_id[LENGTH(MPQ8064_ID_1)]) )
             gTarget = TARGET_MPQ;

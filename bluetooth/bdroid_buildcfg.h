@@ -20,4 +20,9 @@
 
 #define BTM_DEF_LOCAL_NAME   "Samsung Galaxy S5"
 
+// skips conn update at conn completion
+#define BTA_BLE_SKIP_CONN_UPD  TRUE
+// Enables interleaved scan
+#define BTA_HOST_INTERLEAVE_SEARCH TRUE
+
 #endif

@@ -75,9 +75,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     SamsungDoze
 
-# Fingerprint sensor
+# Fingerprint
 PRODUCT_PACKAGES += \
-    fingerprint.msm8974
+    fingerprint.default
 
 PRODUCT_PROPERTY_OVERRIDES += \
     fingerprint_enabled=1

@@ -19,6 +19,8 @@ LOCAL_PATH := device/samsung/klte-common
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
+USE_CLANG_PLATFORM_BUILD := true
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 

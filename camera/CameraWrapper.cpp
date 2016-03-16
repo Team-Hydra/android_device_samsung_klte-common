@@ -38,9 +38,9 @@ static camera_module_t *gVendorModule = 0;
 
 static char **fixed_set_params = NULL;
 
-static int camera_device_open(const hw_module_t *module, const char *name,
-                hw_device_t **device);
-static int camera_device_close(hw_device_t *device);
+static int camera_device_open(const hw_module_t* module, const char* name,
+                hw_device_t** device);
+static int camera_device_close(hw_device_t* device);
 static int camera_get_number_of_cameras(void);
 static int camera_get_camera_info(int camera_id, struct camera_info *info);
 
@@ -485,7 +485,7 @@ static int camera_dump(struct camera_device *device, int fd)
 
 extern "C" void heaptracker_free_leaked_memory(void);
 
-static int camera_device_close(hw_device_t *device)
+static int camera_device_close(hw_device_t* device)
 {
     int ret = 0;
     wrapper_camera_device_t *wrapper_dev = NULL;
@@ -527,14 +527,14 @@ done:
  * so this function will always only be called once per camera instance
  */
 
-static int camera_device_open(const hw_module_t *module, const char *name,
-        hw_device_t **device)
+static int camera_device_open(const hw_module_t* module, const char* name,
+                hw_device_t** device)
 {
     int rv = 0;
     int num_cameras = 0;
     int cameraid;
-    wrapper_camera_device_t *camera_device = NULL;
-    camera_device_ops_t *camera_ops = NULL;
+    wrapper_camera_device_t* camera_device = NULL;
+    camera_device_ops_t* camera_ops = NULL;
 
     android::Mutex::Autolock lock(gCameraWrapperLock);
 

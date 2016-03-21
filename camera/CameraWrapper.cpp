@@ -531,7 +531,7 @@ static int camera_device_open(const hw_module_t *module, const char *name,
     wrapper_camera_device_t *camera_device = NULL;
     camera_device_ops_t *camera_ops = NULL;
 
-    android::Mutex::Autolock lock(gCameraWrapperLock);
+    Mutex::Autolock lock(gCameraWrapperLock);
 
     ALOGV("camera_device open");
 
@@ -567,6 +567,8 @@ static int camera_device_open(const hw_module_t *module, const char *name,
         memset(camera_device, 0, sizeof(*camera_device));
         camera_device->id = cameraid;
 
+        camera_device->initial_get = true;
+
         rv = gVendorModule->common.methods->open(
                 (const hw_module_t*)gVendorModule, name,
                 (hw_device_t**)&(camera_device->vendor));
@@ -587,7 +589,7 @@ static int camera_device_open(const hw_module_t *module, const char *name,
         memset(camera_ops, 0, sizeof(*camera_ops));
 
         camera_device->base.common.tag = HARDWARE_DEVICE_TAG;
-        camera_device->base.common.version = CAMERA_DEVICE_API_VERSION_1_0;
+        camera_device->base.common.version = HARDWARE_DEVICE_API_VERSION(1, 0);
         camera_device->base.common.module = (hw_module_t *)(module);
         camera_device->base.common.close = camera_device_close;
         camera_device->base.ops = camera_ops;
